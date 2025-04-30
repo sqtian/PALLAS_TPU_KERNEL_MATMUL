@@ -1,0 +1,5 @@
+jax
+jaxlib
+numpy
+tabulate
+matplotlib 
