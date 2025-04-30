@@ -4,5 +4,4 @@ VM_NAME=pallas-tpu-v5e-1
 VERSION=v2-alpha-tpuv5-lite
 
 gcloud alpha compute tpus tpu-vm delete $VM_NAME \
-    --zone=$ZONE \
-    --force --quiet
+    --zone=$ZONE
