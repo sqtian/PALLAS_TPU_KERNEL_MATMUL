@@ -191,17 +191,11 @@ def main():
     parser = argparse.ArgumentParser(description='Benchmark and visualize TPU MatMul kernels')
     parser.add_argument('--sizes', nargs='+', type=int, default=[1024, 2048, 4096, 8192],
                       help='Matrix sizes to benchmark (default: 1024 2048 4096 8192)')
-    parser.add_argument('--dtype', type=str, default='bfloat16', choices=['float32', 'bfloat16'],
-                      help='Data type to use (default: bfloat16)')
     parser.add_argument('--output', type=str, default='plots',
                       help='Output directory for plots (default: plots)')
     args = parser.parse_args()
     
-    # Set data type
-    if args.dtype == 'float32':
-        dtype = jnp.float32
-    else:
-        dtype = jnp.bfloat16
+    dtype = jnp.float32
     
     print(f"Benchmarking TPU MatMul kernels with {args.dtype} precision")
     results = run_benchmarks(args.sizes, dtype)

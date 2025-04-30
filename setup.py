@@ -10,6 +10,7 @@ setup(
         "numpy",
         "tabulate",
         "matplotlib",
+        "absl-py",
     ],
     author="Shanquan Tian",
     author_email="sqsqtian@gmail.com",
