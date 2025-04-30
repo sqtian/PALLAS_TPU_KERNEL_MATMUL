@@ -60,7 +60,9 @@ tpu_vm $ python visualize_performance.py
 ## Stop and Remove TPU Instance
 
 Do not forget to stop and remove the TPU instance.
-
+```bash
+$ ./remove_tpu_vm.sh
+```
 
 
 ## License
