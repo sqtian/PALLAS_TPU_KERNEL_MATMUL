@@ -197,7 +197,7 @@ def main():
     
     dtype = jnp.float32
     
-    print(f"Benchmarking TPU MatMul kernels with {args.dtype} precision")
+    print(f"Benchmarking TPU MatMul kernels with {dtype} precision")
     results = run_benchmarks(args.sizes, dtype)
     plot_performance(results, args.output)
 
