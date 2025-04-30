@@ -22,6 +22,17 @@ tpu_vm $ pip install -U "jax[tpu]>=0.4.16" -f https://storage.googleapis.com/jax
 
 ```
 
+## Run TPU Kernels
+```bash
+tpu_vm $ python src/kernels/matmul_v1.py 
+tpu_vm $ python src/kernels/matmul_v2_parallel.py 
+tpu_vm $ python src/kernels/matmul_v3_block.py 
+tpu_vm $ python src/kernels/matmul_v4_bf16.py 
+tpu_vm $ python src/kernels/matmul_v5_large_block.py 
+tpu_vm $ python src/kernels/matmul_v6_int8.py 
+tpu_vm $ python src/kernels/matmul_v7_batch.py
+```
+
 ## Kernel Implementations
 
 This repository includes several MatMul kernel implementations, each showcasing different optimization techniques:
@@ -34,57 +45,23 @@ This repository includes several MatMul kernel implementations, each showcasing 
 6. **V6: INT8 MatMul**: Implements quantized matrix multiplication using INT8 precision.
 7. **V7: Batch MatMul**: Processes batched matrix multiplications with activation functions.
 
-## Performance Comparison
-
-Performance metrics for different kernel implementations on matrix dimensions 8192x8192:
-
-| Kernel Implementation | GFLOP/s | % of XLA Performance |
-|-----------------------|---------|----------------------|
-| XLA MatMul            | ~X      | 100%                |
-| V1: Naive MatMul      | ~Y      | ~Y%                 |
-| V2: Parallel MatMul   | ~Z      | ~Z%                 |
-| V3: Block MatMul      | ~A      | ~A%                 |
-| V4: BFloat16 MatMul   | ~B      | ~B%                 |
-| V5: Large Block MatMul| ~C      | ~C%                 |
-| V6: INT8 MatMul       | ~D      | ~D%                 |
-
-## Usage
-
-```python
-import jax
-import jax.numpy as jnp
-from src.kernels.matmul_v4_bf16 import run_matmul_v4
-
-# Create input matrices
-m, k, n = 4096, 4096, 4096
-a = jnp.ones((m, k), dtype=jnp.bfloat16)
-b = jnp.ones((k, n), dtype=jnp.bfloat16)
-
-# Run the kernel
-result = run_matmul_v4(a, b, bm=128, bk=128, bn=128)
-```
-
-## Running Tests
-
-```bash
-# Run all tests
-python -m unittest discover tests
-
-# Run a specific test
-python -m unittest tests.test_matmul_v4_bf16
-```
-
 ## Benchmarking
 
 The repository includes scripts for benchmarking and visualizing the performance of different kernel implementations:
 
 ```bash
 # Run benchmarks for all kernel implementations
-python benchmark_all.py
+tpu_vm $ python benchmark_all.py
 
 # Generate performance plots
-python visualize_performance.py
+tpu_vm $ python visualize_performance.py
 ```
+
+## Stop and Remove TPU Instance
+
+Do not forget to stop and remove the TPU instance.
+
+
 
 ## License
 
