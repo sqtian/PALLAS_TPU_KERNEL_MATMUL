@@ -16,4 +16,4 @@ setup(
     description="TPU MatMul kernels using JAX's Pallas framework",
     keywords="jax, pallas, tpu, matmul, matrix-multiplication, gpu",
     url="https://github.com/sqtian/PALLAS_TPU_KERNEL_MATMUL",
-) 
+)

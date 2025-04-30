@@ -76,7 +76,9 @@ def batch_matmul_with_activation(
     )(a, b)
 
 if __name__ == "__main__":
-    # Simple test
+    import sys
+    import os
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
     import datetime
     import math
     

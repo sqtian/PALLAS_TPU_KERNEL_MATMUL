@@ -74,7 +74,9 @@ def run_matmul_v6(
     return run_kernel(a, b)
 
 if __name__ == "__main__":
-    # Simple test
+    import sys
+    import os
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
     from src.utils.benchmark import analyze_matmul
     
     # Test for correctness

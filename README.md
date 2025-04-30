@@ -6,15 +6,20 @@ This repository demonstrates various matrix multiplication kernel implementation
 
 Matrix multiplication is a fundamental operation in many machine learning workloads. This repository explores different approaches to implementing and optimizing matrix multiplication kernels on TPUs using JAX's Pallas, a low-level programming model for accelerators.
 
-## Installation
+## Set up a TPU machine
 
 ```bash
+# Create a TPU VM on Google Cloud, and SSH into the instance.
+$ ./create_tpu_then_ssh.sh
+
 # Clone the repository
-git clone https://github.com/yourusername/PALLAS_TPU_KERNEL_MATMUL.git
-cd PALLAS_TPU_KERNEL_MATMUL
+tpu_vm $ git clone https://github.com/sqtian/PALLAS_TPU_KERNEL_MATMUL.git
+tpu_vm $ cd PALLAS_TPU_KERNEL_MATMUL
 
 # Install dependencies
-pip install jax jaxlib
+tpu_vm $ pip install -r requirements.txt
+tpu_vm $ pip install -U "jax[tpu]>=0.4.16" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
+
 ```
 
 ## Kernel Implementations
