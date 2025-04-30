@@ -5,6 +5,9 @@ Test for Matrix Multiplication Kernel V7 (Batch with Activation)
 import unittest
 import jax
 import jax.numpy as jnp
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.kernels.matmul_v7_batch import run_matmul_v7, batch_matmul_with_activation
 
 class TestMatmulV7Batch(unittest.TestCase):

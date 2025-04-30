@@ -38,9 +38,13 @@ def run_matmul_v1(a: jax.Array, b: jax.Array):
     return kernel(a, b)
 
 if __name__ == "__main__":
-    import sys
+    # Simple test
     import os
-    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+    import sys
+    
+    # Add the project root directory to the Python path
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+    
     from src.utils.benchmark import analyze_matmul
     
     # Test for correctness

@@ -5,6 +5,9 @@ Test for Matrix Multiplication Kernel V6 (INT8)
 import unittest
 import jax
 import jax.numpy as jnp
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.kernels.matmul_v6_int8 import run_matmul_v6
 
 class TestMatmulV6Int8(unittest.TestCase):

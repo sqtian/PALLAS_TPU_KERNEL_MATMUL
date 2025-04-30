@@ -5,6 +5,9 @@ Test for Matrix Multiplication Kernel V5 (Large Block)
 import unittest
 import jax
 import jax.numpy as jnp
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.kernels.matmul_v5_large_block import run_matmul_v5
 
 class TestMatmulV5LargeBlock(unittest.TestCase):

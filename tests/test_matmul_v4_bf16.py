@@ -5,6 +5,9 @@ Test for Matrix Multiplication Kernel V4 (BFloat16)
 import unittest
 import jax
 import jax.numpy as jnp
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.kernels.matmul_v4_bf16 import run_matmul_v4
 
 class TestMatmulV4Bf16(unittest.TestCase):

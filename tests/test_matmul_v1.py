@@ -5,6 +5,10 @@ Test for Matrix Multiplication Kernel V1 (Naive)
 import unittest
 import jax
 import jax.numpy as jnp
+import os
+import sys
+# Add the project root directory to the Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.kernels.matmul_v1 import run_matmul_v1
 
 class TestMatmulV1(unittest.TestCase):
