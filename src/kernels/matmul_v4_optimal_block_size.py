@@ -74,14 +74,13 @@ if __name__ == "__main__":
   from src.utils.benchmark import analyze_matmul
 
   # Test for correctness
-  m, k, n = 8192, 8192, 8192
+  m, k, n = 4096, 4096, 4096
   bm, bk, bn = 512, 1024, 1024
-
   dtype = jnp.float32
 
   k1, k2 = jax.random.split(jax.random.key(0), 2)
-  a = jnp.ones((m, k), dtype=dtype)
-  b = jnp.ones((k, n), dtype=dtype)
+  a = jax.random.normal(k1, (m, k), dtype=dtype)
+  b = jax.random.normal(k2, (k, n), dtype=dtype)
 
   result = run_matmul_v4(a, b, bm=bm, bk=bk, bn=bn)
   reference = jnp.matmul(a, b)

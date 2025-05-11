@@ -75,10 +75,11 @@ if __name__ == "__main__":
   # Test for correctness
   m, k, n = 4096, 4096, 4096
   bm, bk, bn = 128, 128, 128
+  dtype = jnp.float32
 
   k1, k2 = jax.random.split(jax.random.key(0), 2)
-  a = jax.random.normal(k1, (m, k), dtype=jnp.float32)
-  b = jax.random.normal(k2, (k, n), dtype=jnp.float32)
+  a = jax.random.normal(k1, (m, k), dtype=dtype)
+  b = jax.random.normal(k2, (k, n), dtype=dtype)
 
   # Verify correctness
   result = run_matmul_v3(a, b, bm=bm, bk=bk, bn=bn)
@@ -87,5 +88,5 @@ if __name__ == "__main__":
   print(f"Correctness check: {'Success' if is_correct else 'Fail'}")
 
   # Benchmark
-  analyze_matmul(m=m, k=k, n=n, dtype=jnp.float32, mm_func=run_matmul_v3,
+  analyze_matmul(m=m, k=k, n=n, dtype=dtype, mm_func=run_matmul_v3,
                  bm=bm, bk=bk, bn=bn)
