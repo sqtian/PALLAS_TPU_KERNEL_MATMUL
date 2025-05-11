@@ -258,10 +258,9 @@ def analyze_kernel_4_performance():
         best_bm_bk_bn)
 
 
-def analyze_kernel_5_performance():
+def analyze_kernel_5_performance(dtype=jnp.bfloat16):
   """Analyze performance of kernel 5 (Quantization)."""
   sizes = [512, 1024, 2048, 4096, 8192]
-  dtype = jnp.bfloat16  # V5 is typically for bfloat16 and quantization
 
   print(
     f"Analyzing performance of kernel 5 (Quantization) with {dtype} precision")
@@ -291,19 +290,6 @@ def main():
   parser.add_argument('--analyze', type=int, default=None, choices=[1, 2, 3, 4, 5],
                       help='Analyze kernel performance (default: 1)')
   args = parser.parse_args()
-  if args.analyze is not None:
-    if args.analyze == 1:
-      analyze_kernel_1_performance()
-    elif args.analyze == 2:
-      analyze_kernel_2_performance()
-    elif args.analyze == 3:
-      analyze_kernel_3_performance()
-    elif args.analyze == 4:
-      analyze_kernel_4_performance()
-    elif args.analyze == 5:
-      analyze_kernel_5_performance()
-    return
-
   # Set data type
   if args.dtype == 'float32':
     dtype = jnp.float32
@@ -314,6 +300,21 @@ def main():
   else:
     raise ValueError(
       "Unsupported data type. Use 'float32', 'bfloat16', or 'int8'.")
+
+  # Run analysis if specified
+  if args.analyze is not None:
+    if args.analyze == 1:
+      analyze_kernel_1_performance()
+    elif args.analyze == 2:
+      analyze_kernel_2_performance()
+    elif args.analyze == 3:
+      analyze_kernel_3_performance()
+    elif args.analyze == 4:
+      analyze_kernel_4_performance()
+    elif args.analyze == 5:
+      analyze_kernel_5_performance(dtype=dtype)
+    return
+
 
   print(f"Benchmarking TPU MatMul kernels with {dtype} precision")
   baseline_xla_perf = run_benchmarks(sizes=args.sizes, kernel_selection=0,
