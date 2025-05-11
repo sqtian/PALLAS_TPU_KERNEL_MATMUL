@@ -216,8 +216,8 @@ def analyze_kernel_4_performance():
     f"Analyzing performance of kernel 4 (Optimal block size) with {dtype} precision")
   baseline_xla_perf = run_benchmarks(sizes=sizes, kernel_selection=0,
                                      dtype=dtype)
-  # Default bm, bk, bn are 128, 128, 128. Adjust if V4 uses different defaults or needs specific ones.
   results = run_benchmarks(sizes=sizes, kernel_selection=4,
+                           bm=512, bk=1024, bn=1024,
                            dtype=dtype)
   plot_performance(results, baseline_xla_perf, output_dir="plots", filename="kernel_4")
   print("Kernel 4 performance analysis complete.")
@@ -234,8 +234,9 @@ def analyze_kernel_5_performance():
                                      dtype=dtype)
   # Default bm, bk, bn are 128, 128, 128. Adjust if V5 uses different defaults or needs specific ones.
   results = run_benchmarks(sizes=sizes, kernel_selection=5,
+                           bm=512, bk=1024, bn=1024,
                            dtype=dtype)
-  plot_performance(results, baseline_xla_perf, output_dir="plots", filename="kernel_5")
+  plot_performance(results, baseline_xla_perf, output_dir="plots", filename="kernel_5_bf16")
   print("Kernel 5 performance analysis complete.")
 
 
