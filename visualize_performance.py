@@ -164,8 +164,8 @@ def main():
     description='Benchmark and visualize TPU MatMul kernels')
   parser.add_argument('--sizes', nargs='+', type=int, default=[512, 1024, 2048, 4096, 8192],
                       help='Matrix sizes to benchmark (default: 512, 1024 2048 4096 8192)')
-  parser.add_argument('--dtype', type=str, default='bfloat16', choices=['float32', 'bfloat16', 'int8'],
-                      help='Data type to use (default: bfloat16)')
+  parser.add_argument('--dtype', type=str, default='float32', choices=['float32', 'bfloat16', 'int8'],
+                      help='Data type to use (default: float32)')
   parser.add_argument('--output', type=str, default='plots',
                       help='Output directory for plots (default: plots)')
   parser.add_argument('--kernel', type=int, default=1,
