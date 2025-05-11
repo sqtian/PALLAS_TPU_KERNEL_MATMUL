@@ -5,3 +5,5 @@ VERSION=v2-alpha-tpuv5-lite
 
 gcloud alpha compute tpus tpu-vm delete $VM_NAME \
     --zone=$ZONE
+
+gcloud alpha compute tpus tpu-vm list --zone=$ZONE
