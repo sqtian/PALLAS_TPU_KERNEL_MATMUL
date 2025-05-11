@@ -27,4 +27,4 @@ __all__ = [
     'v5e_flops',
     'v5e_membw',
     'v5e_op_intensity'
-] 
+]

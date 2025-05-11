@@ -12,7 +12,5 @@ __all__ = [
     'run_matmul_v3',
     'run_matmul_v4',
     'run_matmul_v5',
-    'run_matmul_v6',
-    'run_matmul_v7',
     'batch_matmul_with_activation',
-] 
+]
