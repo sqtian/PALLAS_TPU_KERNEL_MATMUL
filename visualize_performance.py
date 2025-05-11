@@ -105,7 +105,7 @@ def run_benchmarks(sizes: list[int] = [512, 1024, 2048, 4096, 8192], kernel_sele
   return results
 
 
-def plot_performance(results, baseline, output_dir="plots"):
+def plot_performance(results, baseline, output_dir="plots", name=""):
   """Generate plots from benchmark results"""
 
   os.makedirs(output_dir, exist_ok=True)
@@ -154,10 +154,11 @@ def plot_performance(results, baseline, output_dir="plots"):
   plt.grid(True, alpha=0.3)
   plt.legend(fontsize=12)
   plt.tight_layout()
-  plt.savefig(f"{output_dir}/performance_{timestamp}.png", dpi=300)
+  file_name = f"{output_dir}/performance_{timestamp}" if name == "" else f"{output_dir}/performance_{name}"
+  plt.savefig(f"{file_name}.png", dpi=300)
 
   # Save results as JSON for later analysis
-  with open(f"{output_dir}/benchmark_results_{timestamp}.json", 'w') as f:
+  with open(f"{file_name}.json", 'w') as f:
     json.dump({str(k): v for k, v in results.items()}, f, indent=2)
 
   print(f"Plots saved to {output_dir}/")
@@ -173,7 +174,7 @@ def analyze_kernel_1_performance():
                                      dtype=dtype)
   results = run_benchmarks(sizes=[512, 1024], kernel_selection=1,
                            dtype=dtype)
-  plot_performance(results, baseline_xla_perf, output_dir="plots/kernel_1")
+  plot_performance(results, baseline_xla_perf, output_dir="plots/kernel_1", name="kernel_1")
   print("Kernel 1 performance analysis complete.")
 
 
@@ -187,7 +188,7 @@ def analyze_kernel_2_performance():
                                      dtype=dtype)
   results = run_benchmarks(sizes=[512, 1024, 2048, 4096, 8192], kernel_selection=2,
                            dtype=dtype)
-  plot_performance(results, baseline_xla_perf, output_dir="plots/kernel_2")
+  plot_performance(results, baseline_xla_perf, output_dir="plots/kernel_2", name="kernel_2")
   print("Kernel 2 performance analysis complete.")
 
 
@@ -202,7 +203,7 @@ def analyze_kernel_3_performance():
   # Default bm, bk, bn are 128, 128, 128
   results = run_benchmarks(sizes=sizes, kernel_selection=3,
                            dtype=dtype)
-  plot_performance(results, baseline_xla_perf, output_dir="plots/kernel_3")
+  plot_performance(results, baseline_xla_perf, output_dir="plots/kernel_3", name="kernel_3")
   print("Kernel 3 performance analysis complete.")
 
 
@@ -218,7 +219,7 @@ def analyze_kernel_4_performance():
   # Default bm, bk, bn are 128, 128, 128. Adjust if V4 uses different defaults or needs specific ones.
   results = run_benchmarks(sizes=sizes, kernel_selection=4,
                            dtype=dtype)
-  plot_performance(results, baseline_xla_perf, output_dir="plots/kernel_4")
+  plot_performance(results, baseline_xla_perf, output_dir="plots/kernel_4", name="kernel_4")
   print("Kernel 4 performance analysis complete.")
 
 
@@ -234,7 +235,7 @@ def analyze_kernel_5_performance():
   # Default bm, bk, bn are 128, 128, 128. Adjust if V5 uses different defaults or needs specific ones.
   results = run_benchmarks(sizes=sizes, kernel_selection=5,
                            dtype=dtype)
-  plot_performance(results, baseline_xla_perf, output_dir="plots/kernel_5")
+  plot_performance(results, baseline_xla_perf, output_dir="plots/kernel_5", name="kernel_5")
   print("Kernel 5 performance analysis complete.")
 
 
