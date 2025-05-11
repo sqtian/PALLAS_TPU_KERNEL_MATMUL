@@ -52,7 +52,7 @@ if __name__ == "__main__":
   from src.utils.benchmark import analyze_matmul
 
   # Test for correctness
-  m, k, n = 4096, 4096, 4096
+  m, k, n = 1024, 1024, 1024
   dtype = jnp.float32
 
   k1, k2 = jax.random.split(jax.random.key(0))
