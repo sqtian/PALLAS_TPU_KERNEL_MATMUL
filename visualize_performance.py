@@ -147,9 +147,9 @@ def plot_performance(results, baseline, output_dir="plots", filename=""):
     plt.plot(x, y, marker=markers[i % len(markers)],
              linewidth=2, markersize=8, label=name)
 
-  # plt.xscale('log', base=2)
   plt.xlabel('Matrix Size', fontsize=14)
   plt.ylabel('Performance (GFLOP/s)', fontsize=14)
+  plt.xticks(sizes, fontsize=12)
   plt.title('MatMul Kernel Performance by Matrix Size', fontsize=16)
   plt.grid(True, alpha=0.3)
   plt.legend(fontsize=12)
