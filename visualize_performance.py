@@ -234,7 +234,7 @@ def analyze_kernel_4_performance():
                              bm=bm, bk=bk, bn=bn,
                              dtype=dtype)
     for size in sizes:
-      if size in results:
+      if results[size] != {}:
         all_results[size][f"V4: Optimal block size (bm={bm}, bk={bk}, bn={bn})"] = results[size][
           f"V4: Optimal block size (bm={bm}, bk={bk}, bn={bn})"]
       else:
