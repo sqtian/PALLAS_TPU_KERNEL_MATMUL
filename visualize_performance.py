@@ -67,6 +67,8 @@ def run_benchmarks(sizes: list[int] = [512, 1024, 2048, 4096, 8192], kernel_sele
     kernel_name = kernel.name
     kernel_func = kernel.func
     kernel_kwargs = kernel.kwargs
+    if kernel_selection == 4:
+      kernel_name = kernel_name + f" (bm={bm}, bk={bk}, bn={bn})"
 
     try:
       print(f"  Running {kernel_name}...")
@@ -174,7 +176,8 @@ def analyze_kernel_1_performance():
                                      dtype=dtype)
   results = run_benchmarks(sizes=[512, 1024], kernel_selection=1,
                            dtype=dtype)
-  plot_performance(results, baseline_xla_perf, output_dir="plots", filename="kernel_1")
+  plot_performance(results, baseline_xla_perf,
+                   output_dir="plots", filename="kernel_1")
   print("Kernel 1 performance analysis complete.")
 
 
@@ -188,7 +191,8 @@ def analyze_kernel_2_performance():
                                      dtype=dtype)
   results = run_benchmarks(sizes=[512, 1024, 2048, 4096, 8192], kernel_selection=2,
                            dtype=dtype)
-  plot_performance(results, baseline_xla_perf, output_dir="plots", filename="kernel_2")
+  plot_performance(results, baseline_xla_perf,
+                   output_dir="plots", filename="kernel_2")
   print("Kernel 2 performance analysis complete.")
 
 
@@ -203,7 +207,8 @@ def analyze_kernel_3_performance():
   # Default bm, bk, bn are 128, 128, 128
   results = run_benchmarks(sizes=sizes, kernel_selection=3,
                            dtype=dtype)
-  plot_performance(results, baseline_xla_perf, output_dir="plots", filename="kernel_3")
+  plot_performance(results, baseline_xla_perf,
+                   output_dir="plots", filename="kernel_3")
   print("Kernel 3 performance analysis complete.")
 
 
@@ -216,11 +221,29 @@ def analyze_kernel_4_performance():
     f"Analyzing performance of kernel 4 (Optimal block size) with {dtype} precision")
   baseline_xla_perf = run_benchmarks(sizes=sizes, kernel_selection=0,
                                      dtype=dtype)
-  results = run_benchmarks(sizes=sizes, kernel_selection=4,
-                           bm=512, bk=1024, bn=1024,
-                           dtype=dtype)
-  plot_performance(results, baseline_xla_perf, output_dir="plots", filename="kernel_4")
-  print("Kernel 4 performance analysis complete.")
+  best_results = None
+  best_gflops = 0.0
+  best_bm_bk_bn = None
+  for bm, bk, bn in [(128, 128, 128),
+                     (256, 256, 256),
+                     (512, 512, 512),
+                     (512, 1024, 1024),
+                     (1024, 1024, 1024),
+                     (1024, 2048, 2048)]:
+    print(f"  Running with bm={bm}, bk={bk}, bn={bn}...")
+    results = run_benchmarks(sizes=sizes, kernel_selection=4,
+                             bm=bm, bk=bk, bn=bn,
+                             dtype=dtype)
+    gflops = results[sizes[-1]]["V4: Optimal block size"]["gflops"]
+    if gflops > best_gflops:
+      best_gflops = gflops
+      best_results = results
+      best_bm_bk_bn = 'x'.join(map(str, (bm, bk, bn)))
+
+  plot_performance(best_results, baseline_xla_perf,
+                   output_dir="plots", filename="kernel_4")
+  print("Kernel 4 performance analysis complete, using bm, bk, bn = ",
+        best_bm_bk_bn)
 
 
 def analyze_kernel_5_performance():
@@ -236,7 +259,8 @@ def analyze_kernel_5_performance():
   results = run_benchmarks(sizes=sizes, kernel_selection=5,
                            bm=512, bk=1024, bn=1024,
                            dtype=dtype)
-  plot_performance(results, baseline_xla_perf, output_dir="plots", filename="kernel_5_bf16")
+  plot_performance(results, baseline_xla_perf,
+                   output_dir="plots", filename="kernel_5_bf16")
   print("Kernel 5 performance analysis complete.")
 
 
