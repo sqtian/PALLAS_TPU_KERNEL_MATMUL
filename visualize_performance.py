@@ -118,6 +118,7 @@ def plot_performance(results, baseline, output_dir="plots"):
     for name in size_results.keys():
       if name not in custom_kernel_names:
         custom_kernel_names.append(name)
+  all_kernel_names.extend(custom_kernel_names)
 
   # Collect data for plotting
   performance_data = {name: [] for name in all_kernel_names}
