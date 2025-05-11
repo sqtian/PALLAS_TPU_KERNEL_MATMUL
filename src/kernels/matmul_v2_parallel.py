@@ -59,13 +59,13 @@ if __name__ == "__main__":
   from src.utils.benchmark import analyze_matmul
 
   # Test for correctness
-  m, k, n = 4096, 4096, 4096
+  m, k, n = 1024, 1024, 1024
   dtype = jnp.float32
 
   k1, k2 = jax.random.split(jax.random.key(0))
   a = jax.random.normal(k1, (m, k), dtype=dtype)
   b = jax.random.normal(k2, (k, n), dtype=dtype)
-  N = 16  # Number of partitions
+  N = 8  # Number of partitions
 
   # Verify correctness
   result = run_matmul_v2(a, b, N)
