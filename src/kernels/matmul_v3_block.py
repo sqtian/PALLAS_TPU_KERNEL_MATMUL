@@ -73,7 +73,7 @@ if __name__ == "__main__":
   from src.utils.benchmark import analyze_matmul
 
   # Test for correctness
-  m, k, n = 4096, 4096, 4096
+  m, k, n = 2048, 2048, 2048
   bm, bk, bn = 128, 128, 128
   dtype = jnp.float32
 

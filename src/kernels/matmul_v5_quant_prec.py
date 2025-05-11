@@ -87,7 +87,7 @@ if __name__ == "__main__":
   dtype = jnp.bfloat16
 
   # Test for correctness
-  m, k, n = 4096, 4096, 4096
+  m, k, n = 2048, 2048, 2048
   bm, bk, bn = 128, 128, 128
 
   k1, k2 = jax.random.split(jax.random.key(0), 2)

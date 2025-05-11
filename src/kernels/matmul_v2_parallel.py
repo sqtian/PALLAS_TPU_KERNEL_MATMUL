@@ -65,7 +65,7 @@ if __name__ == "__main__":
   k1, k2 = jax.random.split(jax.random.key(0))
   a = jax.random.normal(k1, (m, k), dtype=dtype)
   b = jax.random.normal(k2, (k, n), dtype=dtype)
-  N = 8  # Number of partitions
+  N = 16  # Number of partitions
 
   # Verify correctness
   result = run_matmul_v2(a, b, N)
