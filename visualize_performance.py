@@ -186,7 +186,7 @@ def analyze_kernel_2_performance():
   print(f"Analyzing performance of kernel 2 (Naive) with {dtype} precision")
   baseline_xla_perf = run_benchmarks(sizes=sizes, kernel_selection=0,
                                      dtype=dtype)
-  results = run_benchmarks(sizes=[512, 1024, 2048, 4096, 8192], kernel_selection=2,
+  results = run_benchmarks(sizes=[512, 1024, 2048], kernel_selection=2,
                            dtype=dtype)
   plot_performance(results, baseline_xla_perf, output_dir="plots", filename="kernel_2")
   print("Kernel 2 performance analysis complete.")
