@@ -17,9 +17,9 @@ tpu_vm $ git clone https://github.com/sqtian/PALLAS_TPU_KERNEL_MATMUL.git
 tpu_vm $ cd PALLAS_TPU_KERNEL_MATMUL
 
 # Install dependencies
-tpu_vm $ pip install -r requirements.txt
-tpu_vm $ pip install -U "jax[tpu]>=0.4.16" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
-
+tpu_vm $ python -m pip install --upgrade pip
+tpu_vm $ python -m pip install -r requirements.txt
+tpu_vm $ python -m pip install -U "jax[tpu]>=0.4.16" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
 ```
 
 ## Run TPU Kernels
@@ -27,10 +27,8 @@ tpu_vm $ pip install -U "jax[tpu]>=0.4.16" -f https://storage.googleapis.com/jax
 tpu_vm $ python src/kernels/matmul_v1.py 
 tpu_vm $ python src/kernels/matmul_v2_parallel.py 
 tpu_vm $ python src/kernels/matmul_v3_block.py 
-tpu_vm $ python src/kernels/matmul_v4_bf16.py 
-tpu_vm $ python src/kernels/matmul_v5_large_block.py 
-tpu_vm $ python src/kernels/matmul_v6_int8.py 
-tpu_vm $ python src/kernels/matmul_v7_batch.py
+tpu_vm $ python src/kernels/matmul_v4_optimal_block_size.py
+tpu_vm $ python src/kernels/matmul_v5_quant_prec.py
 ```
 
 ## Kernel Implementations

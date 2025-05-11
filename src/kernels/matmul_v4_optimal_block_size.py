@@ -13,6 +13,22 @@ from jax.experimental.pallas import tpu as pltpu
 from matmul_v3_block import run_matmul_v3
 
 
+def matmul_v4_block_kernel(a_ref, b_ref, o_ref):
+  """
+  Block-based matrix multiplication kernel.
+
+  Args:
+      a_ref: Reference to the first input matrix block
+      b_ref: Reference to the second input matrix block
+      o_ref: Reference to the output matrix block
+  """
+  @pl.when(pl.program_id(2) == 0)
+  def init():
+    o_ref[...] = jnp.zeros_like(o_ref)
+  # Accumulates the multiplication for this block.
+  o_ref[...] += a_ref[...] @ b_ref[...]
+
+
 @functools.partial(jax.jit, static_argnames=['bm', 'bk', 'bn'])
 def run_matmul_v4(
     a: jax.Array,
@@ -34,7 +50,21 @@ def run_matmul_v4(
   Returns:
       Matrix product of a and b of shape (m, n)
   """
-  return run_matmul_v3(a, b, bm=bm, bk=bk, bn=bn)
+  m, k = a.shape
+  _, n = b.shape
+  assert k == b.shape[0]
+
+  run_kernel = pl.pallas_call(
+      matmul_v3_block_kernel,
+      grid=(m // bm, n // bn, k // bk),
+      in_specs=[
+          pl.BlockSpec((bm, bk), lambda i, j, k: (i, k)),
+          pl.BlockSpec((bk, bn), lambda i, j, k: (k, j)),
+      ],
+      out_specs=pl.BlockSpec((bm, bn), lambda i, j, k: (i, j)),
+      out_shape=jax.ShapeDtypeStruct((m, n), a.dtype),
+  )
+  return run_kernel(a, b)
 
 
 if __name__ == "__main__":

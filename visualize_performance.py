@@ -122,7 +122,8 @@ def plot_performance(results, baseline, output_dir="plots"):
   for size in sizes:
     # Get baseline performance
     baseline_results = baseline[size]
-    performance_data["XLA MatMul"].append(baseline_results[size]["XLA MatMul"]["gflops"])
+    performance_data["XLA MatMul"].append(
+      baseline_results[size]["XLA MatMul"]["gflops"])
     # Get custom kernel performance.
     for name in kernel_names:
       if name in results[size]:
