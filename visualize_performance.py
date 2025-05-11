@@ -265,13 +265,13 @@ def analyze_kernel_5_performance(dtype=jnp.bfloat16):
   print(
     f"Analyzing performance of kernel 5 (Quantization) with {dtype} precision")
   baseline_xla_perf = run_benchmarks(sizes=sizes, kernel_selection=0,
-                                     dtype=jnp.bfloat16)
+                                     dtype=dtype)
   # Default bm, bk, bn are 128, 128, 128. Adjust if V5 uses different defaults or needs specific ones.
   results = run_benchmarks(sizes=sizes, kernel_selection=5,
                            bm=512, bk=512, bn=512,
                            dtype=dtype)
   plot_performance(results, baseline_xla_perf,
-                   output_dir="plots", filename="kernel_5_int8")
+                   output_dir="plots", filename=f"kernel_5_{dtype}")
   print("Kernel 5 performance analysis complete.")
 
 

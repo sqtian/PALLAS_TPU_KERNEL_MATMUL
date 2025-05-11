@@ -45,9 +45,17 @@ def benchmark(f, ntrials: int = 100):
 def get_matmul_performance(m: int, k: int, n: int, dtype: np.dtype,
                            mm_func, **kwargs):
   """Get the performance of a matrix multiplication kernel in FLOP/s."""
-  k1, k2 = jax.random.split(jax.random.key(0), 2)
-  a = jax.random.normal(k1, (m, k), dtype=dtype)
-  b = jax.random.normal(k2, (k, n), dtype=dtype)
+  if dtype == jnp.int8:
+    k1, k2 = jax.random.split(jax.random.key(0), 2)
+    a = jax.random.randint(k1, (m, k), minval=-128, maxval=127,
+                           dtype=dtype)
+    b = jax.random.randint(k2, (k, n), minval=-128, maxval=127,
+                           dtype=dtype)
+  else:
+    k1, k2 = jax.random.split(jax.random.key(0), 2)
+    a = jax.random.normal(k1, (m, k), dtype=dtype)
+    b = jax.random.normal(k2, (k, n), dtype=dtype)
+
   time = benchmark(mm_func)(a, b, **kwargs)
   mm_flops = matmul_flops(m, k, n) / time
   return mm_flops, time
