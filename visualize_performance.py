@@ -268,7 +268,7 @@ def analyze_kernel_5_performance(dtype=jnp.bfloat16):
                                      dtype=dtype)
   # Default bm, bk, bn are 128, 128, 128. Adjust if V5 uses different defaults or needs specific ones.
   results = run_benchmarks(sizes=sizes, kernel_selection=5,
-                           bm=512, bk=1024, bn=1024,
+                           bm=512, bk=512, bn=512,
                            dtype=dtype)
   plot_performance(results, baseline_xla_perf,
                    output_dir="plots", filename="kernel_5_bf16")
