@@ -228,8 +228,7 @@ def analyze_kernel_4_performance():
                      (256, 256, 256),
                      (512, 512, 512),
                      (512, 1024, 1024),
-                     (1024, 1024, 1024),
-                     (1024, 2048, 2048)]:
+                     (1024, 1024, 1024)]:
     print(f"  Running with bm={bm}, bk={bk}, bn={bn}...")
     results = run_benchmarks(sizes=sizes, kernel_selection=4,
                              bm=bm, bk=bk, bn=bn,
@@ -255,7 +254,7 @@ def analyze_kernel_4_performance():
 
   plot_performance(all_results, baseline_xla_perf,
                    output_dir="plots", filename="kernel_4")
-  print("Kernel 4 performance analysis complete, using bm, bk, bn = ",
+  print("Kernel 4 performance analysis complete, best config uses bm, bk, bn = ",
         best_bm_bk_bn)
 
 
