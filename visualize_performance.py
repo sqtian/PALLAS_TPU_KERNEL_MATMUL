@@ -304,7 +304,7 @@ def analyze_kernel_5_performance(dtype=jnp.bfloat16):
       best_bm_bk_bn = 'x'.join(map(str, (bm, bk, bn)))
 
   plot_performance(all_results, baseline_xla_perf,
-                   output_dir="plots", filename="kernel_4")
+                   output_dir="plots", filename="kernel_5")
   print("Kernel 5 performance analysis complete, best config uses bm, bk, bn = ",
         best_bm_bk_bn)
 
