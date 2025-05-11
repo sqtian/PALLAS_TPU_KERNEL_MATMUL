@@ -221,9 +221,9 @@ def analyze_kernel_4_performance():
     f"Analyzing performance of kernel 4 (Optimal block size) with {dtype} precision")
   baseline_xla_perf = run_benchmarks(sizes=sizes, kernel_selection=0,
                                      dtype=dtype)
-  best_results = None
   best_gflops = 0.0
   best_bm_bk_bn = None
+  all_results = {512: {}, 1024: {}, 2048: {}, 4096: {}, 8192: {}}
   for bm, bk, bn in [(128, 128, 128),
                      (256, 256, 256),
                      (512, 512, 512),
@@ -234,13 +234,19 @@ def analyze_kernel_4_performance():
     results = run_benchmarks(sizes=sizes, kernel_selection=4,
                              bm=bm, bk=bk, bn=bn,
                              dtype=dtype)
-    gflops = results[sizes[-1]][f"V4: Optimal block size (bm={bm}, bk={bk}, bn={bn})"]["gflops"]
+    all_results.update(results)
+    try:
+      gflops = results[sizes[-1]][f"V4: Optimal block size (bm={bm}, bk={bk}, bn={bn})"]["gflops"]
+      print(f"    {gflops:.2f} GFLOP/s")
+    except Exception as e:
+      print(f"    Did not get gflops: {e}")
+      gflops = 0.0
+
     if gflops > best_gflops:
       best_gflops = gflops
-      best_results = results
       best_bm_bk_bn = 'x'.join(map(str, (bm, bk, bn)))
 
-  plot_performance(best_results, baseline_xla_perf,
+  plot_performance(all_results, baseline_xla_perf,
                    output_dir="plots", filename="kernel_4")
   print("Kernel 4 performance analysis complete, using bm, bk, bn = ",
         best_bm_bk_bn)
