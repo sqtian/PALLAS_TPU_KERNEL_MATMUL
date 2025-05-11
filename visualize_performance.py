@@ -234,9 +234,16 @@ def analyze_kernel_4_performance():
     results = run_benchmarks(sizes=sizes, kernel_selection=4,
                              bm=bm, bk=bk, bn=bn,
                              dtype=dtype)
-    all_results.update(results)
+    for size in sizes:
+      if size in results:
+        all_results[size][f"V4: Optimal block size (bm={bm}, bk={bk}, bn={bn})"] = results[size][
+          f"V4: Optimal block size (bm={bm}, bk={bk}, bn={bn})"]
+      else:
+        all_results[size][f"V4: Optimal block size (bm={bm}, bk={bk}, bn={bn})"] = {
+        }
     try:
-      gflops = results[sizes[-1]][f"V4: Optimal block size (bm={bm}, bk={bk}, bn={bn})"]["gflops"]
+      gflops = results[sizes[-1]
+                       ][f"V4: Optimal block size (bm={bm}, bk={bk}, bn={bn})"]["gflops"]
       print(f"    {gflops:.2f} GFLOP/s")
     except Exception as e:
       print(f"    Did not get gflops: {e}")
