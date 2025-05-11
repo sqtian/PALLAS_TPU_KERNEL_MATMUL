@@ -38,22 +38,44 @@ This repository includes several MatMul kernel implementations, each showcasing 
 1. **V1: Naive MatMul**: A basic implementation without specific optimizations.
 2. **V2: Parallel MatMul**: Splits matrices by rows/columns for parallel processing.
 3. **V3: Block MatMul**: Implements block-based matrix multiplication using a 3D grid.
-4. **V4: BFloat16 MatMul**: Utilizes BFloat16 precision with float32 accumulation for better performance.
-5. **V5: Large Block MatMul**: Uses larger block sizes to optimize memory access patterns.
-6. **V6: INT8 MatMul**: Implements quantized matrix multiplication using INT8 precision.
-7. **V7: Batch MatMul**: Processes batched matrix multiplications with activation functions.
+4. **V4: Optimal block size MatMul**: Uses larger block sizes to optimize memory access patterns. 
+5. **V5: Quantization**: Utilizes BFloat16 or INT8 precision with float32 accumulation for better performance.
 
 ## Benchmarking
 
 The repository includes scripts for benchmarking and visualizing the performance of different kernel implementations:
 
 ```bash
-# Run benchmarks for all kernel implementations
-tpu_vm $ python benchmark_all.py
-
 # Generate performance plots
-tpu_vm $ python visualize_performance.py
+tpu_vm $ python visualize_performance.py --analyze=5 --dtype="bfloat16"
 ```
+
+## Performance
+
+### Kernel 1
+
+![Kernel 1 Performance](plots/performance_kernel_1.png)
+
+### Kernel 2
+
+![Kernel 2 Performance](plots/performance_kernel_2.png)
+
+### Kernel 3
+
+![Kernel 3 Performance](plots/performance_kernel_3.png)
+
+### Kernel 4
+
+![Kernel 4 Performance](plots/performance_kernel_4.png)
+
+### Kernel 5
+
+![Kernel 5 Performance](plots/performance_kernel_5.png)
+
+
+
+
+
 
 ## Stop and Remove TPU Instance
 
