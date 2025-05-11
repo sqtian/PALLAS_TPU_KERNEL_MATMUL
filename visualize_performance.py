@@ -32,7 +32,9 @@ class KernelInfo:
   func: callable
   kwargs: dict
 
+
 _BASELINE_KERNEL_NAME = "Baseline XLA MatMul"
+
 
 def run_benchmarks(sizes: list[int] = [512, 1024, 2048, 4096, 8192], kernel_selection: int = 0,
                    n_parallel: int = 8, bm: int = 128, bk: int = 128, bn: int = 128,
@@ -133,8 +135,6 @@ def plot_performance(results, baseline, output_dir="plots"):
     for name in custom_kernel_names:
       if name in custom_results:
         performance_data[name].append(custom_results[name]["gflops"])
-      else:
-        performance_data[name].append(0)
 
   # Plot raw performance (GFLOP/s)
   plt.figure(figsize=(12, 8))
@@ -159,6 +159,81 @@ def plot_performance(results, baseline, output_dir="plots"):
   print(f"Plots saved to {output_dir}/")
 
 
+def analyze_kernel_1_performance():
+  """Analyze performance of kernel 1 (Naive)"""
+  sizes = [512, 1024, 2048, 4096, 8192]
+  dtype = jnp.float32
+
+  print(f"Analyzing performance of kernel 1 (Naive) with {dtype} precision")
+  baseline_xla_perf = run_benchmarks(sizes=sizes, kernel_selection=0,
+                                     dtype=dtype)
+  results = run_benchmarks(sizes=[512, 1024], kernel_selection=1,
+                           dtype=dtype)
+  plot_performance(results, baseline_xla_perf, output_dir="plots/kernel_1")
+  print("Kernel 1 performance analysis complete.")
+
+
+def analyze_kernel_2_performance():
+  """Analyze performance of kernel 2."""
+  sizes = [512, 1024, 2048, 4096, 8192]
+  dtype = jnp.float32
+
+  print(f"Analyzing performance of kernel 2 (Naive) with {dtype} precision")
+  baseline_xla_perf = run_benchmarks(sizes=sizes, kernel_selection=0,
+                                     dtype=dtype)
+  results = run_benchmarks(sizes=[512, 1024, 2048, 4096, 8192], kernel_selection=2,
+                           dtype=dtype)
+  plot_performance(results, baseline_xla_perf, output_dir="plots/kernel_2")
+  print("Kernel 2 performance analysis complete.")
+
+
+def analyze_kernel_3_performance():
+  """Analyze performance of kernel 3 (Block)."""
+  sizes = [512, 1024, 2048, 4096, 8192]
+  dtype = jnp.float32  # Or jnp.bfloat16 if preferred for this kernel
+
+  print(f"Analyzing performance of kernel 3 (Block) with {dtype} precision")
+  baseline_xla_perf = run_benchmarks(sizes=sizes, kernel_selection=0,
+                                     dtype=dtype)
+  # Default bm, bk, bn are 128, 128, 128
+  results = run_benchmarks(sizes=sizes, kernel_selection=3,
+                           dtype=dtype)
+  plot_performance(results, baseline_xla_perf, output_dir="plots/kernel_3")
+  print("Kernel 3 performance analysis complete.")
+
+
+def analyze_kernel_4_performance():
+  """Analyze performance of kernel 4 (Optimal block size)."""
+  sizes = [512, 1024, 2048, 4096, 8192]
+  dtype = jnp.bfloat16  # V4 is typically for bfloat16
+
+  print(
+    f"Analyzing performance of kernel 4 (Optimal block size) with {dtype} precision")
+  baseline_xla_perf = run_benchmarks(sizes=sizes, kernel_selection=0,
+                                     dtype=dtype)
+  # Default bm, bk, bn are 128, 128, 128. Adjust if V4 uses different defaults or needs specific ones.
+  results = run_benchmarks(sizes=sizes, kernel_selection=4,
+                           dtype=dtype)
+  plot_performance(results, baseline_xla_perf, output_dir="plots/kernel_4")
+  print("Kernel 4 performance analysis complete.")
+
+
+def analyze_kernel_5_performance():
+  """Analyze performance of kernel 5 (Quantization)."""
+  sizes = [512, 1024, 2048, 4096, 8192]
+  dtype = jnp.bfloat16  # V5 is typically for bfloat16 and quantization
+
+  print(
+    f"Analyzing performance of kernel 5 (Quantization) with {dtype} precision")
+  baseline_xla_perf = run_benchmarks(sizes=sizes, kernel_selection=0,
+                                     dtype=dtype)
+  # Default bm, bk, bn are 128, 128, 128. Adjust if V5 uses different defaults or needs specific ones.
+  results = run_benchmarks(sizes=sizes, kernel_selection=5,
+                           dtype=dtype)
+  plot_performance(results, baseline_xla_perf, output_dir="plots/kernel_5")
+  print("Kernel 5 performance analysis complete.")
+
+
 def main():
   parser = argparse.ArgumentParser(
     description='Benchmark and visualize TPU MatMul kernels')
@@ -171,7 +246,21 @@ def main():
   parser.add_argument('--kernel', type=int, default=1,
                       choices=[0, 1, 2, 3, 4, 5],
                       help='Kernel selection (default: 1)')
+  parser.add_argument('--analyze', type=int, default=None, choices=[1, 2, 3, 4, 5],
+                      help='Analyze kernel performance (default: 1)')
   args = parser.parse_args()
+  if args.analyze is not None:
+    if args.analyze == 1:
+      analyze_kernel_1_performance()
+    elif args.analyze == 2:
+      analyze_kernel_2_performance()
+    elif args.analyze == 3:
+      analyze_kernel_3_performance()
+    elif args.analyze == 4:
+      analyze_kernel_4_performance()
+    elif args.analyze == 5:
+      analyze_kernel_5_performance()
+    return
 
   # Set data type
   if args.dtype == 'float32':
