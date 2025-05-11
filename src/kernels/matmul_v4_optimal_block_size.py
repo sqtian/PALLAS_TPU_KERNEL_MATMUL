@@ -1,5 +1,5 @@
 """
-Matrix Multiplication Kernel V5 (Large Block)
+Matrix Multiplication Kernel V4 (Optimal Block Size)
 
 This module implements a matrix multiplication kernel using larger block sizes
 for optimal memory access patterns on TPU.
@@ -10,7 +10,6 @@ import jax.numpy as jnp
 import functools
 from jax.experimental import pallas as pl
 from jax.experimental.pallas import tpu as pltpu
-from matmul_v3_block import run_matmul_v3
 
 
 def matmul_v4_block_kernel(a_ref, b_ref, o_ref):
@@ -55,7 +54,7 @@ def run_matmul_v4(
   assert k == b.shape[0]
 
   run_kernel = pl.pallas_call(
-      matmul_v3_block_kernel,
+      matmul_v4_block_kernel,
       grid=(m // bm, n // bn, k // bk),
       in_specs=[
           pl.BlockSpec((bm, bk), lambda i, j, k: (i, k)),

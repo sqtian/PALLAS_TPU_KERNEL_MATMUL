@@ -1,5 +1,5 @@
 """
-Matrix Multiplication Kernel V4 (BFloat16)
+Matrix Multiplication Kernel V5 (Quantized Precision)
 
 This module implements a BFloat16 matrix multiplication kernel using Pallas on TPU.
 The kernel uses BFloat16 for computation but accumulates in Float32 for better precision.
