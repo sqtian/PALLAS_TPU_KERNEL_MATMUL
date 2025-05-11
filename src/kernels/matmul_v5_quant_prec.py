@@ -99,5 +99,5 @@ if __name__ == "__main__":
   print(f"Correctness check: {'Success' if is_correct else 'Fail'}")
 
   # Benchmark
-  analyze_matmul(m=m, k=k, n=n, dtype=jnp.bfloat16, mm_func=run_matmul_v4,
+  analyze_matmul(m=m, k=k, n=n, dtype=jnp.bfloat16, mm_func=run_matmul_v5,
                  bm=bm, bk=bk, bn=bn)
