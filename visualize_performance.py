@@ -73,7 +73,7 @@ def run_benchmarks(sizes: list[int] = [512, 1024, 2048, 4096, 8192], kernel_sele
     kernel_name = kernel.name
     kernel_func = kernel.func
     kernel_kwargs = kernel.kwargs
-    if kernel_selection == 4:
+    if kernel_selection in [4, 5]:
       kernel_name = kernel_name + f" (bm={bm}, bk={bk}, bn={bn})"
 
     try:
@@ -269,15 +269,44 @@ def analyze_kernel_5_performance(dtype=jnp.bfloat16):
   sizes = [512, 1024, 2048, 4096, 8192]
 
   print(
-    f"Analyzing performance of kernel 5 (Quantization) with {dtype} precision")
+    f"Analyzing performance of kernel 5 (Optimal block size) with {dtype} precision")
   baseline_xla_perf = run_benchmarks(sizes=sizes, kernel_selection=0,
                                      dtype=dtype)
-  results = run_benchmarks(sizes=sizes, kernel_selection=5,
-                           bm=512, bk=1024, bn=1024,
-                           dtype=dtype)
-  plot_performance(results, baseline_xla_perf,
-                   output_dir="plots", filename=f"kernel_5_{_DTYPE_TO_STR[dtype]}")
-  print("Kernel 5 performance analysis complete.")
+  best_gflops = 0.0
+  best_bm_bk_bn = None
+  all_results = {512: {}, 1024: {}, 2048: {}, 4096: {}, 8192: {}}
+  for bm, bk, bn in [(128, 128, 128),
+                     (256, 256, 256),
+                     (512, 512, 512),
+                     (512, 1024, 1024),
+                     (1024, 1024, 1024)]:
+    print(f"  Running with bm={bm}, bk={bk}, bn={bn}...")
+    results = run_benchmarks(sizes=sizes, kernel_selection=5,
+                             bm=bm, bk=bk, bn=bn,
+                             dtype=dtype)
+    for size in sizes:
+      if results[size] != {}:
+        all_results[size][f"V5: quantization (bm={bm}, bk={bk}, bn={bn})"] = results[size][
+          f"V5: quantization (bm={bm}, bk={bk}, bn={bn})"]
+      else:
+        all_results[size][f"V5: quantization (bm={bm}, bk={bk}, bn={bn})"] = {
+        }
+    try:
+      gflops = results[sizes[-1]
+                       ][f"V5: quantization (bm={bm}, bk={bk}, bn={bn})"]["gflops"]
+      print(f"    {gflops:.2f} GFLOP/s")
+    except Exception as e:
+      print(f"    Did not get gflops: {e}")
+      gflops = 0.0
+
+    if gflops > best_gflops:
+      best_gflops = gflops
+      best_bm_bk_bn = 'x'.join(map(str, (bm, bk, bn)))
+
+  plot_performance(all_results, baseline_xla_perf,
+                   output_dir="plots", filename="kernel_4")
+  print("Kernel 5 performance analysis complete, best config uses bm, bk, bn = ",
+        best_bm_bk_bn)
 
 
 def main():
