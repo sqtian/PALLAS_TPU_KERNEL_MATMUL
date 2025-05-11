@@ -131,10 +131,11 @@ def plot_performance(results, baseline, output_dir="plots"):
     performance_data[_BASELINE_KERNEL_NAME].append(
       baseline_results["XLA MatMul"]["gflops"])
     # Get custom kernel performance.
-    custom_results = results[size]
-    for name in custom_kernel_names:
-      if name in custom_results:
-        performance_data[name].append(custom_results[name]["gflops"])
+    if size in results:
+      custom_results = results[size]
+      for name in custom_kernel_names:
+        if name in custom_results:
+          performance_data[name].append(custom_results[name]["gflops"])
 
   # Plot raw performance (GFLOP/s)
   plt.figure(figsize=(12, 8))
