@@ -234,7 +234,7 @@ def analyze_kernel_4_performance():
     results = run_benchmarks(sizes=sizes, kernel_selection=4,
                              bm=bm, bk=bk, bn=bn,
                              dtype=dtype)
-    gflops = results[sizes[-1]]["V4: Optimal block size"]["gflops"]
+    gflops = results[sizes[-1]][f"V4: Optimal block size (bm={bm}, bk={bk}, bn={bn})"]["gflops"]
     if gflops > best_gflops:
       best_gflops = gflops
       best_results = results
