@@ -35,6 +35,12 @@ class KernelInfo:
 
 _BASELINE_KERNEL_NAME = "Baseline XLA MatMul"
 
+_DTYPE_TO_STR = {
+    jnp.float32: "float32",
+    jnp.bfloat16: "bfloat16",
+    jnp.int8: "int8",
+}
+
 
 def run_benchmarks(sizes: list[int] = [512, 1024, 2048, 4096, 8192], kernel_selection: int = 0,
                    n_parallel: int = 4, bm: int = 128, bk: int = 128, bn: int = 128,
@@ -271,7 +277,7 @@ def analyze_kernel_5_performance(dtype=jnp.bfloat16):
                            bm=512, bk=512, bn=512,
                            dtype=dtype)
   plot_performance(results, baseline_xla_perf,
-                   output_dir="plots", filename=f"kernel_5_{dtype}")
+                   output_dir="plots", filename=f"kernel_5_{_DTYPE_TO_STR[dtype]}")
   print("Kernel 5 performance analysis complete.")
 
 
@@ -314,7 +320,6 @@ def main():
     elif args.analyze == 5:
       analyze_kernel_5_performance(dtype=dtype)
     return
-
 
   print(f"Benchmarking TPU MatMul kernels with {dtype} precision")
   baseline_xla_perf = run_benchmarks(sizes=args.sizes, kernel_selection=0,
