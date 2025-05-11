@@ -84,13 +84,15 @@ if __name__ == "__main__":
     os.path.join(os.path.dirname(__file__), '../../')))
   from src.utils.benchmark import analyze_matmul
 
+  dtype = jnp.bfloat16
+
   # Test for correctness
   m, k, n = 4096, 4096, 4096
   bm, bk, bn = 128, 128, 128
 
   k1, k2 = jax.random.split(jax.random.key(0), 2)
-  a = jax.random.normal(k1, (m, k), dtype=jnp.bfloat16)
-  b = jax.random.normal(k2, (k, n), dtype=jnp.bfloat16)
+  a = jax.random.normal(k1, (m, k), dtype=dtype)
+  b = jax.random.normal(k2, (k, n), dtype=dtype)
 
   # Verify correctness - allow some tolerance due to bfloat16 precision
   result = run_matmul_v5(a, b, bm=bm, bk=bk, bn=bn)
@@ -99,5 +101,5 @@ if __name__ == "__main__":
   print(f"Correctness check: {'Success' if is_correct else 'Fail'}")
 
   # Benchmark
-  analyze_matmul(m=m, k=k, n=n, dtype=jnp.bfloat16, mm_func=run_matmul_v5,
+  analyze_matmul(m=m, k=k, n=n, dtype=dtype, mm_func=run_matmul_v5,
                  bm=bm, bk=bk, bn=bn)
