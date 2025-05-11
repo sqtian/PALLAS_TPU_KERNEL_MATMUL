@@ -32,6 +32,7 @@ class KernelInfo:
   func: callable
   kwargs: dict
 
+_BASELINE_KERNEL_NAME = "Baseline XLA MatMul"
 
 def run_benchmarks(sizes: list[int] = [512, 1024, 2048, 4096, 8192], kernel_selection: int = 0,
                    n_parallel: int = 8, bm: int = 128, bk: int = 128, bn: int = 128,
@@ -97,6 +98,8 @@ def run_benchmarks(sizes: list[int] = [512, 1024, 2048, 4096, 8192], kernel_sele
       print(f"    Failed: {e}")
 
     results[size] = size_results
+
+  print('Results:', results)
   return results
 
 
@@ -109,32 +112,33 @@ def plot_performance(results, baseline, output_dir="plots"):
   # All sizes
   sizes = sorted(list(baseline.keys()))
   # Get all kernel names from results
-  kernel_names = []
+  all_kernel_names = [_BASELINE_KERNEL_NAME]
+  custom_kernel_names = []
   for size_results in results.values():
     for name in size_results.keys():
-      if name not in kernel_names:
-        kernel_names.append(name)
+      if name not in custom_kernel_names:
+        custom_kernel_names.append(name)
 
   # Collect data for plotting
-  performance_data = {name: [] for name in kernel_names}
-  # xla_pct_data = {name: [] for name in kernel_names}
+  performance_data = {name: [] for name in all_kernel_names}
 
   for size in sizes:
     # Get baseline performance
     baseline_results = baseline[size]
-    performance_data["XLA MatMul"].append(
-      baseline_results[size]["XLA MatMul"]["gflops"])
+    performance_data[_BASELINE_KERNEL_NAME].append(
+      baseline_results["XLA MatMul"]["gflops"])
     # Get custom kernel performance.
-    for name in kernel_names:
-      if name in results[size]:
-        performance_data[name].append(results[size][name]["gflops"])
+    custom_results = results[size]
+    for name in custom_kernel_names:
+      if name in custom_results:
+        performance_data[name].append(custom_results[name]["gflops"])
       else:
         performance_data[name].append(0)
 
   # Plot raw performance (GFLOP/s)
   plt.figure(figsize=(12, 8))
   markers = ['o', 's', '^', 'D', 'v', '<', '>']
-  for i, name in enumerate(kernel_names):
+  for i, name in enumerate(all_kernel_names):
     plt.plot(sizes, performance_data[name], marker=markers[i % len(markers)],
              linewidth=2, markersize=8, label=name)
 
