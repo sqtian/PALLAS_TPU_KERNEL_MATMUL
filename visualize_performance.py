@@ -142,7 +142,7 @@ def plot_performance(results, baseline, output_dir="plots", filename=""):
     if size in results:
       custom_results = results[size]
       for name in custom_kernel_names:
-        if name in custom_results:
+        if name in custom_results and custom_results[name] != {}:
           performance_data[name].append([size, custom_results[name]["gflops"]])
 
   # Plot raw performance (GFLOP/s)
