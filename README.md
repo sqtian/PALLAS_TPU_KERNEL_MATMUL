@@ -22,8 +22,9 @@ tpu_vm $ python -m pip install -r requirements.txt
 tpu_vm $ python -m pip install -U "jax[tpu]>=0.4.16" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
 ```
 
-## Run TPU Kernels
-Run single kernels.
+## Running the TPU Kernels
+
+Execute the individual kernel implementations:
 
 ```bash
 tpu_vm $ python src/kernels/matmul_v1.py 
@@ -40,15 +41,15 @@ tpu_vm $ python visualize_performance.py --analyze=5 --dtype="bfloat16"
 
 ## Performance and Kernel Implementations
 
-This repository includes several MatMul kernel implementations, each showcasing different optimization techniques:
+This repository includes five matrix multiplication kernel implementations, each demonstrating different optimization techniques:
 
-1. **V1: Naive MatMul**: A basic implementation without specific optimizations.
-2. **V2: Parallel MatMul**: Splits matrices by rows/columns for parallel processing.
-3. **V3: Block MatMul**: Implements block-based matrix multiplication using a 3D grid.
-4. **V4: Optimal block size MatMul**: Uses larger block sizes to optimize memory access patterns. 
-5. **V5: Quantization**: Utilizes BFloat16 or INT8 precision with float32 accumulation for better performance.
+**V1: Naive Implementation** - A basic implementation without specific optimizations.
+**V2: Parallel Processing** - Splits matrices by rows and columns for parallel processing.
+**V3: Block-based Approach** - Implements block-based matrix multiplication using a 3D grid.
+**V4: Optimal Block Sizing** - Uses larger block sizes to optimize memory access patterns. 
+**V5: Quantization Techniques** - Utilizes BFloat16 or INT8 precision with float32 accumulation for better performance.
 
-### Kernel 1: Naive MatMul
+### Kernel 1: Naive Implementation
 A basic implementation without specific optimizations.
 
 ```
@@ -97,12 +98,9 @@ It improves the memory usage slightly. The figure below shows the results for `N
 
 ![Kernel 2 Performance](plots/performance_kernel_2.png)
 
-### Kernel 3: Implements block-based matrix multiplication using a 3D grid
+### Kernel 3: Block-based Matrix Multiplication using 3D Grid
 
-Previously the input matrices of size [block, M] or [M, block] are still loaded into VMEM.
-One straightforward thought is to implement block-based matmul using a 3D grid, rather than the row/column split.
-We can define ['bm', 'bk', 'bn'] to split the input and output matrices.
-In the kernel code, we need to initialize the `o_ref[...]` for each iteration of K.
+The previous approach still loads input matrices of size [block, M] or [M, block] into VMEM. A more efficient approach implements block-based matrix multiplication using a 3D grid instead of row/column splitting. This method defines block dimensions ['bm', 'bk', 'bn'] to partition the input and output matrices. The kernel code initializes `o_ref[...]` for each K iteration.
 
 ```
 def matmul_v3_block_kernel(a_ref, b_ref, o_ref):
@@ -143,20 +141,17 @@ The figure below shows the successful runs for all sizes, with relatively bad pe
 
 ![Kernel 3 Performance](plots/performance_kernel_3.png)
 
-### Kernel 4: Uses optimal block sizes to optimize memory access patterns
+### Kernel 4: Optimal Block Sizing for Memory Access Optimization
 
-TPUs are different from GPUs. When writing CUDA kernels, users need to think about the accesses from the view of threads which happen in parallel to each other
-However, **TPUs are actually a SIMD systolic array device, each kernel could be viewed as sequential execution.**
+TPUs differ from GPUs in their architecture. While CUDA kernels require consideration of parallel thread access patterns, TPUs are SIMD systolic array devices where each kernel operates as sequential execution.
 
-Thus, we may search for the optimal block sizes for the best performance, because the loaded LHS can be reused for adjacent calculations.
-
-The figure below shows a search for the best block size. It can be found that `(bm, bk, bn) == (512, 512, 512)` gives the best FLOP/s for this setting.
+The optimal block sizes can be determined through performance testing, as the loaded left-hand side matrix can be reused for adjacent calculations. Testing shows that `(bm, bk, bn) == (512, 512, 512)` provides the best FLOP/s for this configuration.
 
 ![Kernel 4 Performance](plots/performance_kernel_4.png)
 
 ### Kernel 5: Quantization
 
-The optimal block sizes can change for different configs, including the precisions being used. The figure below shows the best performance for `dtype = BFLOAT16`, where `(bm, bk, bn) == (512, 1024, 1024)` almost achieves the performance of XLA library `jnp.matmul()`.
+Optimal block sizes vary depending on configuration parameters, including precisions. Performance testing with `dtype = BFLOAT16` shows that `(bm, bk, bn) == (512, 1024, 1024)` nearly matches the performance of the XLA library `jnp.matmul()`.
 
 ![Kernel 5 Performance](plots/performance_kernel_5.png)
 
@@ -164,7 +159,7 @@ The optimal block sizes can change for different configs, including the precisio
 
 ## Stop and Remove TPU Instance
 
-Do not forget to stop and remove the TPU instance.
+Remember to stop and remove the TPU instance when finished:
 ```bash
 $ ./remove_tpu_vm.sh
 ```
@@ -172,8 +167,8 @@ $ ./remove_tpu_vm.sh
 
 ## License
 
-MIT
+[MIT](LICENSE)
 
 ## Acknowledgements
 
-This project is inspired by JAX's Pallas framework and builds upon the TPU programming model.
+This project is inspired by [JAX's Pallas framework](https://jax.readthedocs.io/en/latest/pallas/index.html) and builds upon the several examples.
